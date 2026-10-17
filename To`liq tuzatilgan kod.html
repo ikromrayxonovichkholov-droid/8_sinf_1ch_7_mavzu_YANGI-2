@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To‘ti ovi</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #4a148c;
+}
+
+.oyin-sharti {
+    color: #4a148c;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#ochko {
+    font-size: 23px;
+    font-weight: bold;
+    color: #1565c0;
+    margin: 15px;
+}
+
+button {
+    background: #6a1b9a;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+button:hover {
+    background: #4a148c;
+}
+
+#oyinMaydoni {
+    width: min(800px, 100%);
+    height: 500px;
+    margin: auto;
+    background: linear-gradient(#b3e5fc, #e1f5fe);
+    border: 4px solid #1565c0;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+#toti {
+    position: absolute;
+    left: 30px;
+    top: 200px;
+    font-size: 48px;
+    line-height: 1;
+    z-index: 2;
+    user-select: none;
+}
+
+.yulduz {
+    position: absolute;
+    font-size: 35px;
+    line-height: 1.2;
+    user-select: none;
+}
+
+#xabar {
+    color: #4a148c;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🦜 To‘ti ovi</h1>
+
+<p class="oyin-sharti">
+    🎯 Maqsad: yulduzlarni yig‘ib, 80 ochko to‘plang!
+</p>
+
+<div id="ochko">Ochko: 0</div>
+
+<button type="button" onclick="qaytaBoshlash()">
+    🔄 Qayta boshlash
+</button>
+
+<p>Harakatlanish uchun klaviaturadagi ⬅️ ⬆️ ➡️ ⬇️ strelkalarini bosing.</p>
+
+<div id="oyinMaydoni">
+
+    <div id="toti">🦜</div>
+
+    <div class="yulduz" data-ochko="5"
+         style="left: 15%; top: 15%;">⭐</div>
+
+    <div class="yulduz" data-ochko="7"
+         style="left: 36%; top: 30%;">⭐</div>
+
+    <div class="yulduz" data-ochko="8"
+         style="left: 62%; top: 12%;">⭐</div>
+
+    <div class="yulduz" data-ochko="10"
+         style="left: 82%; top: 35%;">⭐</div>
+
+    <div class="yulduz" data-ochko="12"
+         style="left: 20%; top: 70%;">⭐</div>
+
+    <div class="yulduz" data-ochko="15"
+         style="left: 45%; top: 60%;">⭐</div>
+
+    <div class="yulduz" data-ochko="18"
+         style="left: 67%; top: 78%;">⭐</div>
+
+    <div class="yulduz" data-ochko="20"
+         style="left: 85%; top: 65%;">⭐</div>
+
+</div>
+
+<div id="xabar">Omad tilaymiz! 🏆</div>
+
+<script>
+const toti = document.getElementById("toti");
+const maydon = document.getElementById("oyinMaydoni");
+const ochkoMatni = document.getElementById("ochko");
+const xabar = document.getElementById("xabar");
+const yulduzlar = document.querySelectorAll(".yulduz");
+
+let x = 30;
+let y = 200;
+let ochko = 0;
+let oyinTugadi = false;
+let oxirgiYonalish = "right";
+
+const tezlik = 12;
+const totiOlchami = 48;
+
+function joylashtir() {
+    toti.style.left = x + "px";
+    toti.style.top = y + "px";
+
+    // To‘ti harakat yo‘nalishiga qaraydi
+    toti.style.transform =
+        oxirgiYonalish === "left"
+        ? "scaleX(1)"
+        : "scaleX(-1)";
+}
+
+document.addEventListener("keydown", function(event) {
+    const strelkalar = [
+        "ArrowLeft", "ArrowRight",
+        "ArrowUp", "ArrowDown"
+    ];
+
+    if (!strelkalar.includes(event.key)) return;
+
+    event.preventDefault();
+
+    if (oyinTugadi) return;
+
+    const maydonKengligi = maydon.clientWidth;
+    const maydonBalandligi = maydon.clientHeight;
+
+    if (event.key === "ArrowRight") {
+        x += tezlik;
+        oxirgiYonalish = "right";
+    }
+
+    if (event.key === "ArrowLeft") {
+        x -= tezlik;
+        oxirgiYonalish = "left";
+    }
+
+    if (event.key === "ArrowUp") {
+        y -= tezlik;
+    }
+
+    if (event.key === "ArrowDown") {
+        y += tezlik;
+    }
+
+    x = Math.max(0, Math.min(
+        x, maydonKengligi - totiOlchami
+    ));
+
+    y = Math.max(0, Math.min(
+        y, maydonBalandligi - totiOlchami
+    ));
+
+    joylashtir();
+    tekshir();
+});
+
+function tekshir() {
+    const totiRect = toti.getBoundingClientRect();
+
+    yulduzlar.forEach(function(yulduz) {
+        if (yulduz.dataset.yigildi === "ha") return;
+
+        const yulduzRect = yulduz.getBoundingClientRect();
+
+        const tegdi =
+            totiRect.left < yulduzRect.right &&
+            totiRect.right > yulduzRect.left &&
+            totiRect.top < yulduzRect.bottom &&
+            totiRect.bottom > yulduzRect.top;
+
+        if (tegdi) {
+            yulduz.dataset.yigildi = "ha";
+            yulduz.style.display = "none";
+
+            ochko += Number(yulduz.dataset.ochko);
+
+            ochkoMatni.textContent = "Ochko: " + ochko;
+
+            if (ochko >= 80) {
+                oyinTugadi = true;
+                xabar.textContent =
+                    "🏆 G‘ALABA! Tabriklaymiz! 80 ochko to‘pladingiz!";
+            } else {
+                xabar.textContent =
+                    "⭐ Barakalla! Yana yulduzlar yig‘ing!";
+            }
+        }
+    });
+}
+
+function qaytaBoshlash() {
+    x = 30;
+    y = 200;
+    ochko = 0;
+    oyinTugadi = false;
+    oxirgiYonalish = "right";
+
+    yulduzlar.forEach(function(yulduz) {
+        yulduz.style.display = "block";
+        delete yulduz.dataset.yigildi;
+    });
+
+    ochkoMatni.textContent = "Ochko: 0";
+    xabar.textContent = "Omad tilaymiz! 🏆";
+
+    joylashtir();
+}
+</script>
+
+</body>
+</html>
